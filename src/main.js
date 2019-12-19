@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router } from "react-router-dom";
-import HotelBooking from "./HotelBooking";
-import HotelPage from "./HotelPage"
-import BookingShow from "./bookingShow";
+import HotelBooking from "./components/HotelBooking";
+import ClassicFormPage from "./components/ClassicFormPage";
+import HotelPage from "./components/HotelPage";
+import BookingShow from "./components/bookingShow";
+import auth from "./firebase";
 
 import {
   MDBNavbar,
@@ -26,7 +28,6 @@ import {
 } from "mdbreact";
 import "./index.css";
 export default class App extends Component {
-  
   render() {
     return (
       <div>
@@ -41,18 +42,11 @@ function Greeting(props) {
   if (isLoggedIn) {
     return <ClassicFormPage />;
   }
-  return <LoginFormPage /> ;
+  return <LoginFormPage />;
 }
 
-// function OnLogIn(props) {
-//   const onLoggedIn = props.onLoggedIn;
-//   if (onLoggedIn) {
-//     return <LoginedFormPage />;
-//   }
-//   return
-// }
 
-function SigninButton (props) {
+function SigninButton(props) {
   return <p onClick={props.onClick}>Sign Up</p>;
 }
 
@@ -70,8 +64,8 @@ class Navbar extends Component {
   };
 
   setLoggined = () => {
-    this.setLoggined({onLoggedIn: true})
-  }
+    this.setLoggined({ onLoggedIn: true });
+  };
 
   toggleCollapse = collapseID => () =>
     this.setState(prevState => ({
@@ -82,8 +76,6 @@ class Navbar extends Component {
     super(props);
     this.handleSignInClick = this.handleSignInClick.bind(this);
     this.handleSignUPClick = this.handleSignUPClick.bind(this);
-    // this.handleLoginClick = this.handleLoginClick.bind(this);
-    // this.handleLogoutClick = this.handleLogoutClick.bind(this);
     this.state = { isLoggedIn: false };
   }
   handleSignInClick() {
@@ -94,31 +86,16 @@ class Navbar extends Component {
     this.setState({ isLoggedIn: false });
   }
 
-  // handleLogoutClick() {
-  //   this.setState({ onLoggedIn: false });
-  // }
-
-  // handleLoginClick() {
-  //   this.setState({ onLoggedIn: true });
-  // }
-
   render() {
     const isLoggedIn = this.state.isLoggedIn;
     // const onLoggedIn = this.state.onLoggedIn;
     let showState;
-    
 
     if (isLoggedIn) {
       showState = <SignUPButton onClick={this.handleSignUPClick} />;
     } else {
       showState = <SigninButton onClick={this.handleSignInClick} />;
     }
-
-    // if (onLoggedIn) {
-    //   showState = <LogoutButton onClick={this.handleLogoutClick} />;
-    // } 
-
-
 
     const overlay = (
       <div
@@ -129,12 +106,8 @@ class Navbar extends Component {
     );
     return (
       <div id="navBar">
-        
         <Greeting isLoggedIn={isLoggedIn} />
-        {/* <OnLogIn onLoggedIn={onLoggedIn}/> */}
-        {/* <HotelPage  />
-        <HotelBooking />
-         */}
+       
         <Router>
           {/* left side */}
           <div>
@@ -175,140 +148,6 @@ class Navbar extends Component {
   }
 }
 
-class ClassicFormPage extends Component {
-  state = {
-    collapseID: ""
-  };
-
-  toggleCollapse = collapseID => () =>
-    this.setState(prevState => ({
-      collapseID: prevState.collapseID !== collapseID ? collapseID : ""
-    }));
-
-  render() {
-    return (
-      <div>
-      
-        
-      <div id="classicformpage">
-        
-        <MDBView>
-          {" "}
-          {/* sign up from*/}
-          <MDBMask
-            style={{ paddingTop: 46 }}
-            className="d-flex justify-content-center align-items-center gradient"
-          >
-            <MDBContainer>
-              <MDBRow>
-                <MDBAnimation
-                  type="fadeInLeft"
-                  delay=".3s"
-                  className="white-text text-center text-md-left col-md-6 mt-xl-5 mb-5"
-                >
-                  <h1 style={{ color: "#fff" }}>Sign up</h1>
-                  <hr className="hr-light" />
-                  <h6 style={{ color: "#fff" }}>
-                    กรุณาสมัครสมาชิก เพื่อสิทธิพิเศษที่เหนือกว่า
-                  </h6>
-
-                  <button type="button" className="btn btn-outline-primary">
-                    LEARNMORE
-                  </button>
-                </MDBAnimation>
-
-                <MDBCol
-                  md="8"
-                  xl="4"
-                  className="mb-4"
-                  style={{ color: "#fff", fontSize: 16 }}
-                >
-                  <MDBAnimation type="fadeInRight" delay=".3s">
-                    <MDBCard id="classic-card">
-                      <MDBCardBody className="white-text">
-                        <h3 className="text-center">Register</h3>
-                        <hr className="hr-light" />
-                        <form onSubmit={this.handleSubmit}>
-                          <label>Your First and Last name: </label>
-                          <MDBInputGroup
-                            className="form-control form-control-sm"
-                            inputs={
-                              <>
-                                <input
-                                  className="form-control form-control-sm"
-                                  type="text"
-                                  placeholder="First name"
-                                  required
-                                />
-                                <input
-                                  className="form-control form-control-sm"
-                                  type="text"
-                                  placeholder="Last name"
-                                  required
-                                />
-                              </>
-                            }
-                          />
-
-                          <label>Your Birthdate: </label>
-                          <input
-                            id="bdate"
-                            type="date"
-                            className="form-control form-control-sm"
-                            required
-                          />
-
-                          <label>Your Email: </label>
-                          <input
-                            type="email"
-                            className="form-control form-control-sm"
-                            id="email2"
-                            placeholder="Enter email"
-                            name="email"
-                            required
-                          ></input>
-
-                          <label>Password: </label>
-                          <input
-                            type="password"
-                            className="form-control form-control-sm"
-                            id="password"
-                            placeholder="Enter password"
-                            name="password"
-                            required
-                          ></input>
-
-                          <label>Confirm Password: </label>
-                          <input
-                            type="password"
-                            className="form-control form-control-sm"
-                            id="Cpassword"
-                            placeholder="Enter password"
-                            name="password"
-                            required
-                          ></input>
-                          <input
-                            type="submit"
-                            className="btn btn-primary mt-4"
-                            value="SIGN UP"
-                          ></input>
-                        </form>
-                        <hr className="hr-light" />
-                      </MDBCardBody>
-                    </MDBCard>
-                  </MDBAnimation>
-                </MDBCol>
-              </MDBRow>
-            </MDBContainer>
-          </MDBMask>
-        </MDBView>
-      </div>
-      <HotelPage  />
-       
-      </div>
-    );
-  }
-}
 
 class LoginFormPage extends Component {
   state = {
@@ -316,108 +155,166 @@ class LoginFormPage extends Component {
   };
 
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       currentUser: null,
-      message: ''
-    }
+      message: ""
+    };
   }
-
-  handleClick() {
-    console.log('this is:', this);
-    return <LoginedFormPage/>
-  }
-
 
   toggleCollapse = collapseID => () =>
     this.setState(prevState => ({
       collapseID: prevState.collapseID !== collapseID ? collapseID : ""
     }));
 
+  componentDidMount() {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        this.setState({
+          currentUser: user
+        });
+      }
+    });
+  }
+
+  onChange = e => {
+    const { name, value } = e.target;
+
+    this.setState({
+      [name]: value
+    });
+  };
+
+  onSubmit = e => {
+    e.preventDefault();
+
+    const { email, password } = this.state;
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then(response => {
+        this.setState({
+          currentUser: response.user
+        });
+      })
+      .catch(error => {
+        this.setState({
+          message: error.message
+        });
+      });
+  };
+
+  logout = e => {
+    console.log("logout");
+
+    e.preventDefault();
+    auth.signOut().then(response => {
+      this.setState({
+        currentUser: null
+      });
+    });
+  };
+
   render() {
-    return (
-      <div>
-      <div id="LoginFormPage">
-        <MDBView>
-          <MDBMask
-            style={{ paddingTop: 126 }}
-            className="d-flex justify-content-center align-items-center gradient"
-          >
-            <MDBContainer>
-              <MDBRow>
-                <MDBAnimation
-                  type="fadeInLeft"
-                  delay=".3s"
-                  className="white-text text-center text-md-left col-md-6 mt-xl-5 mb-5"
-                >
-                  <h1 style={{ color: "#fff" }}>Login</h1>
-                  <hr className="hr-light" />
-                  <h6 style={{ color: "#fff" }}>
-                    กรุณาเข้าสู่ระบบ เพื่อใช้บริการจองโรงแรมไปกับ Hotel Del Luna
-                  </h6>
+    const { message, currentUser } = this.state;
 
-                  <button type="button" className="btn btn-outline-primary">
-                    SIGN UP
-                  </button>
-                </MDBAnimation>
-
-                <MDBCol
-                  md="8"
-                  xl="4"
-                  className="mb-4"
-                  style={{ color: "#fff", fontSize: 16 }}
-                >
-                  <MDBAnimation type="fadeInRight" delay=".3s">
-                    <MDBCard id="classic-card">
-                      <MDBCardBody className="white-text">
-                        <h3 className="text-center">Login</h3>
-                        <hr className="hr-light" />
-                        <form onSubmit={this.onSubmit}>
-                          <label>Your Email: </label>
-                          <input
-                            type="email"
-                            className="form-control form-control-sm"
-                            id="email2"
-                            placeholder="Enter email"
-                            name="email"
-                            onChange={this.onChange}
-                            required
-                          ></input>
-
-                          <label>Password: </label>
-                          <input
-                            type="password"
-                            className="form-control form-control-sm"
-                            id="password"
-                            placeholder="Enter password"
-                            name="password"
-                            onChange={this.onChange}
-                            required
-                          ></input>
-
-                          <input
-                            type="submit"
-                            className="btn btn-primary mt-4"
-                            value="LOGIN"
-                            onClick={this.setLoggined}
-                          ></input>
-                        </form>
-                        <hr className="hr-light" />
-                      </MDBCardBody>
-                    </MDBCard>
-                  </MDBAnimation>
-                </MDBCol>
-              </MDBRow>
-            </MDBContainer>
-          </MDBMask>
-        </MDBView>
+    if (currentUser) {
+      return (
+        <div>
+          <LoginedFormPage thisEmail={currentUser.email} logout={this.logout} />
+          <HotelBooking />
         </div>
-        {/* <HotelBooking /> */}
-        <HotelPage/>
-      </div>
+      );
+    }
+
+    return (
+      <section>
+        <div id="LoginFormPage">
+          <MDBView>
+            <MDBMask
+              style={{ paddingTop: 126 }}
+              className="d-flex justify-content-center align-items-center gradient"
+            >
+              <MDBContainer>
+                <MDBRow>
+                  <MDBAnimation
+                    type="fadeInLeft"
+                    delay=".3s"
+                    className="white-text text-center text-md-left col-md-6 mt-xl-5 mb-5"
+                  >
+                    <h1 style={{ color: "#fff" }}>Login</h1>
+                    <hr className="hr-light" />
+                    <h6 style={{ color: "#fff" }}>
+                      กรุณาเข้าสู่ระบบ เพื่อใช้บริการจองโรงแรมไปกับ Hotel Del
+                      Luna
+                    </h6>
+
+                    <button type="button" className="btn btn-outline-primary">
+                      SIGN UP
+                    </button>
+                  </MDBAnimation>
+
+                  <MDBCol
+                    md="8"
+                    xl="4"
+                    className="mb-4"
+                    style={{ color: "#fff", fontSize: 16 }}
+                  >
+                    <MDBAnimation type="fadeInRight" delay=".3s">
+                      <MDBCard id="classic-card">
+                        <MDBCardBody className="white-text">
+                          <h3 className="text-center">Login</h3>
+                          <hr className="hr-light" />
+                          <form onSubmit={this.onSubmit}>
+                            <label>Your Email: </label>
+                            <input
+                              type="email"
+                              className="form-control form-control-sm"
+                              id="email2"
+                              placeholder="Enter email"
+                              name="email"
+                              onChange={this.onChange}
+                              required
+                            ></input>
+
+                            <label>Password: </label>
+                            <input
+                              type="password"
+                              className="form-control form-control-sm"
+                              id="password"
+                              placeholder="Enter password"
+                              name="password"
+                              onChange={this.onChange}
+                              required
+                            ></input>
+
+                            {message ? (
+                              <p className="help is-danger">{message}</p>
+                            ) : null}
+                            <hr className="hr-light" />
+                            <div className="field is-grouped">
+                              <div className="control">
+                                <button className="btn btn-primary">
+                                  Submit
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                          <hr className="hr-light" />
+                        </MDBCardBody>
+                      </MDBCard>
+                    </MDBAnimation>
+                  </MDBCol>
+                </MDBRow>
+              </MDBContainer>
+            </MDBMask>
+          </MDBView>
+        </div>
+        
+        <HotelPage />
+      </section>
     );
   }
 }
@@ -425,7 +322,8 @@ class LoginFormPage extends Component {
 class LoginedFormPage extends Component {
   state = {
     collapseID: "",
-    isOpen: false
+    isOpen: false,
+    currentUser: null
   };
 
   toggleCollapse = collapseID => () =>
@@ -449,27 +347,22 @@ class LoginedFormPage extends Component {
                     alt="user"
                     style={{ width: "100%", height: "100%" }}
                   />
-                  <h1>John Doe</h1>
-                  <p className="email">bear@aoa.com</p>
+                  <h1>AAA</h1>
+                  <p className="email">{this.props.thisEmail}</p>
 
-                  
-                    
-                    <button
-                      onClick={e => this.setState({ isOpen: true })}
-                      type="button"
-                      className="btn btn-info"
-                      
-                    >
-                      My Booking
-                    </button>
-                    <BookingShow
-                      isOpen={this.state.isOpen}
-                      onClose={e => this.setState({ isOpen: false })}
-                    >
-                      
-                    </BookingShow>
-                    <HotelBooking/>
-                 
+                  <button
+                    onClick={e => this.setState({ isOpen: true })}
+                    type="button"
+                    className="btn btn-info"
+                  >
+                    My Booking
+                  </button>
+                  <button onClick={this.props.logout}>Logout</button>
+                  <BookingShow
+                    isOpen={this.state.isOpen}
+                    onClose={e => this.setState({ isOpen: false })}
+                  ></BookingShow>
+                  {/* <HotelBooking /> */}
                 </div>
               </MDBRow>
             </MDBContainer>
