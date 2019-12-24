@@ -5,6 +5,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faSearchLocation } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Information from './information';
+import Axios from 'axios';
 import {
     MDBMask,
     MDBRow,
@@ -36,12 +37,18 @@ export default class HotelPage extends Component {
           hotel6Prc: "THB 6,992.50"
         };
       }
+
+      getData = ()=> {
+        Axios.get('https://21cbfc7f-4bc2-4161-b629-f97b9dfa7dd7.mock.pstmn.io/v1/home').then(result=>{
+          console.log(result.data)
+        })
+      }
     
       render() {
         return (
           <section className="text-center my-5">
             <h2 className="h1-responsive font-weight-bold my-5">
-              Our Recommended Hotel
+              Our Recommended Hotel {this.getData}
             </h2>
             {/* <p className="grey-text w-responsive mx-auto mb-5">
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
